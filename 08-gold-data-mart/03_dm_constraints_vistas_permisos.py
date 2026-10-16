@@ -222,13 +222,19 @@ for obj in [T_DM_V_REVENUE_MENSUAL, T_DM_V_PROPINAS_TARJETA, T_DM_FACT_TRIPS, T_
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC **Evidencia (`SHOW GRANTS`):** el compañero tiene `SELECT` sobre `gold_taxi_dm_v_revenue_mensual` y `gold_taxi_dm_v_propinas_tarjeta`, y `USE SCHEMA` sobre el schema. Sobre `gold_taxi_dm_fact_trips` y `silver_yellow_trips_enriched` no tiene ningún permiso (`SHOW GRANTS` vacío). Las capturas de su prueba (vistas que sí puede leer y el error `PERMISSION_DENIED` sobre `fact_trips` y silver) están en la carpeta `evidencia/` del repositorio.
+# MAGIC **Evidencia:** `SHOW GRANTS` muestra `SELECT` para el compañero sobre `gold_taxi_dm_v_revenue_mensual` y `gold_taxi_dm_v_propinas_tarjeta`, (el `USE SCHEMA` sobre el schema se otorgó en la celda anterior). Sobre `gold_taxi_dm_fact_trips` y `silver_yellow_trips_enriched` no tiene `SELECT`, como confirman los errores de su prueba.
+# MAGIC
+# MAGIC Prueba del compañero en el SQL Editor con su usuario (capturas en `evidencia/` del repositorio):
+# MAGIC - `SELECT * FROM ...gold_taxi_dm_v_revenue_mensual LIMIT 10` → ✅ 10 filas
+# MAGIC - `SELECT * FROM ...gold_taxi_dm_v_propinas_tarjeta LIMIT 10` → ✅ 10 filas
+# MAGIC - `SELECT * FROM ...gold_taxi_dm_fact_trips LIMIT 10` → ❌ `[INSUFFICIENT_PERMISSIONS] User does not have SELECT on Table '51810_databricks.sebastian_velasco.gold_taxi_dm_fact_trips'. SQLSTATE: 42501`
+# MAGIC - `SELECT * FROM ...silver_yellow_trips_enriched LIMIT 10` → ❌ `[INSUFFICIENT_PERMISSIONS] User does not have SELECT on Table '51810_databricks.sebastian_velasco.silver_yellow_trips_enriched'. SQLSTATE: 42501`
 # MAGIC
 # MAGIC **Pregunta: ¿por qué el compañero lee la vista aunque no tenga `SELECT` sobre las tablas que la vista consulta?**
 # MAGIC
 # MAGIC Porque en Unity Catalog una vista se ejecuta con los permisos de su **dueño** sobre los objetos que consulta, no con los de quien la lee:
 # MAGIC - Cuando el compañero consulta la vista, Unity Catalog verifica solo **sus** permisos sobre la vista: `USE CATALOG`, `USE SCHEMA` y `SELECT` sobre la vista.
 # MAGIC - El acceso a `fact_trips` y a las dimensiones se verifica contra el **dueño de la vista** (yo), que es dueño de esas tablas.
-# MAGIC - Si el compañero intenta consultar `fact_trips` directamente, se verifican sus propios permisos sobre la tabla, no los tiene, y recibe `PERMISSION_DENIED`.
+# MAGIC - Si el compañero intenta consultar `fact_trips` directamente, se verifican sus propios permisos sobre la tabla, no los tiene, y recibe `INSUFFICIENT_PERMISSIONS` (SQLSTATE 42501).
 # MAGIC
 # MAGIC Por eso la vista funciona como una **capa de seguridad**: expone a Finanzas solo lo que necesita (agregados por mes, borough o franja, con nombres legibles), sin dar acceso al detalle viaje por viaje ni a silver. Una consecuencia: si el dueño perdiera el acceso a las tablas base, la vista dejaría de funcionar para todos los que la leen.

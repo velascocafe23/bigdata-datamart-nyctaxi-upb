@@ -15,7 +15,7 @@ Modelo estrella en la capa Gold, construido desde Silver, para que el área de F
 | [`08-gold-data-mart/03_dm_constraints_vistas_permisos.py`](08-gold-data-mart/03_dm_constraints_vistas_permisos.py) | **Parte 3** (PK/FK con `RELY`, vistas de consumo, permisos) |
 | [`08-gold-data-mart/04_dm_preguntas_negocio.py`](08-gold-data-mart/04_dm_preguntas_negocio.py) | **Parte 4** (6 preguntas de negocio, solo con el mart) |
 | [`08-gold-data-mart/05_dm_rendimiento.py`](08-gold-data-mart/05_dm_rendimiento.py) | **Parte 5** (silver vs estrella, liquid clustering) y **Parte 6** (DAG) |
-| [`evidencia/`](evidencia/) | Capturas de la prueba de permisos del compañero (Parte 3.3) |
+| [`evidencia/`](evidencia/) | **Parte 3.3**: `SHOW GRANTS` y capturas de la prueba del compañero (lee las vistas; `fact_trips` y silver dan `INSUFFICIENT_PERMISSIONS`) |
 
 Los notebooks están en formato fuente de Databricks (`.py`). Cada sección tiene un encabezado `%md`, la transformación, una celda de verificación con `assert` y las respuestas a las preguntas en celdas `%md`.
 
