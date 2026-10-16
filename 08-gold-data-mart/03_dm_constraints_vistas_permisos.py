@@ -222,7 +222,7 @@ for obj in [T_DM_V_REVENUE_MENSUAL, T_DM_V_PROPINAS_TARJETA, T_DM_FACT_TRIPS, T_
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC **Evidencia:** `SHOW GRANTS` muestra `SELECT` para el compañero sobre `gold_taxi_dm_v_revenue_mensual` y `gold_taxi_dm_v_propinas_tarjeta`, (el `USE SCHEMA` sobre el schema se otorgó en la celda anterior). Sobre `gold_taxi_dm_fact_trips` y `silver_yellow_trips_enriched` no tiene `SELECT`, como confirman los errores de su prueba.
+# MAGIC **Evidencia:** `SHOW GRANTS` muestra `SELECT` para el compañero sobre `gold_taxi_dm_v_revenue_mensual` y `gold_taxi_dm_v_propinas_tarjeta` (el `USE SCHEMA` sobre el schema se otorgó en la celda anterior). Sobre `gold_taxi_dm_fact_trips` y `silver_yellow_trips_enriched` no tiene `SELECT`, como confirman los errores de su prueba.
 # MAGIC
 # MAGIC Prueba del compañero en el SQL Editor con su usuario (capturas en `evidencia/` del repositorio):
 # MAGIC - `SELECT * FROM ...gold_taxi_dm_v_revenue_mensual LIMIT 10` → ✅ 10 filas
